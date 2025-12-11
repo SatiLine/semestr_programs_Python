@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>850</width><height>700</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>Platformer Game - Игра</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_stats">
+      <property name="spacing"><number>20</number></property>
+      <item>
+       <widget class="QLabel" name="label_score">
+        <property name="font"><font><pointsize>12</pointsize><weight>75</weight><bold>true</bold></font></property>
+        <property name="text"><string>Счёт: 0</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_level">
+        <property name="font"><font><pointsize>12</pointsize><weight>75</weight><bold>true</bold></font></property>
+        <property name="text"><string>Уровень: 1</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_lives">
+        <property name="font"><font><pointsize>12</pointsize><weight>75</weight><bold>true</bold></font></property>
+        <property name="text"><string>Жизни: 3</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_time">
+        <property name="font"><font><pointsize>12</pointsize><weight>75</weight><bold>true</bold></font></property>
+        <property name="text"><string>Время: 00:00</string></property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_health_text">
+        <property name="font"><font><pointsize>10</pointsize></font></property>
+        <property name="text"><string>Здоровье:</string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="progress_health">
+        <property name="minimumSize"><size><width>150</width><height>0</height></size></property>
+        <property name="value"><number>100</number></property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QGraphicsView" name="graphics_view">
+      <property name="minimumSize"><size><width>800</width><height>600</height></size></property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_controls">
+      <property name="text"><string>Управление: A D - движение | Пробел - прыжок | ЛКМ - атака | Enter - пауза | ESC - выход в меню</string></property>
+      <property name="alignment"><set>Qt::AlignCenter</set></property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry"><rect><x>0</x><y>0</y><width>850</width><height>21</height></rect></property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
