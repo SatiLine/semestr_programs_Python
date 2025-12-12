@@ -19,7 +19,7 @@ class Player(QGraphicsRectItem):
         super().__init__(0, 0, self.PLAYER_WIDTH, self.PLAYER_HEIGHT)
         self.game_scene = scene
 
-        self.velocity_x = 0
+        # Движение теперь напрямую setPos()
         self.velocity_y = 0
         self.is_on_ground = False
 
@@ -59,38 +59,30 @@ class Player(QGraphicsRectItem):
         if self.velocity_y > self.MAX_VELOCITY_Y:
             self.velocity_y = self.MAX_VELOCITY_Y
 
-        # Применяем и горизонтальную, и вертикальную скорости
-        new_x = self.x() + self.velocity_x
+        # Только вертикальное движение через velocity_y
+        # Горизонтальное движение в move_left() и move_right()
         new_y = self.y() + self.velocity_y
+        self.setPos(self.x(), new_y)
 
-        # Проверяем границы по X
-        if new_x < 0:
-            new_x = 0
-            self.velocity_x = 0
-        elif new_x > self.game_scene.SCENE_WIDTH - self.PLAYER_WIDTH:
-            new_x = self.game_scene.SCENE_WIDTH - self.PLAYER_WIDTH
-            self.velocity_x = 0
-
-        self.setPos(new_x, new_y)
-
+        # Проверка коллизий с платформами
         self.is_on_ground = False
         for platform in self.game_scene.platforms:
             if self.collidesWithItem(platform):
                 if self.velocity_y > 0:
+                    # Приземление на платформу
                     self.setPos(self.x(), platform.y() - self.PLAYER_HEIGHT)
                     self.velocity_y = 0
                     self.is_on_ground = True
                 elif self.velocity_y < 0:
+                    # Удар головой о платформу
                     self.setPos(self.x(), platform.y() + platform.rect().height())
                     self.velocity_y = 0
 
-        # Дополнительная проверка границ
+        # Проверка границ по X
         if self.x() < 0:
             self.setPos(0, self.y())
-            self.velocity_x = 0
         elif self.x() > self.game_scene.SCENE_WIDTH - self.PLAYER_WIDTH:
             self.setPos(self.game_scene.SCENE_WIDTH - self.PLAYER_WIDTH, self.y())
-            self.velocity_x = 0
 
         # Падение за пределы экрана
         if self.y() > self.game_scene.SCENE_HEIGHT:
@@ -98,16 +90,30 @@ class Player(QGraphicsRectItem):
             self.reset_position()
 
     def move_left(self):
-        """Движение влево"""
-        self.velocity_x = -self.MOVE_SPEED
+        """Движение влево - ИСПРАВЛЕНО: напрямую двигает персонажа"""
+        new_x = self.x() - self.MOVE_SPEED
+
+        # Проверка границ
+        if new_x < 0:
+            new_x = 0
+
+        self.setPos(new_x, self.y())
 
     def move_right(self):
-        """Движение вправо"""
-        self.velocity_x = self.MOVE_SPEED
+        """Движение вправо - ИСПРАВЛЕНО: напрямую двигает персонажа"""
+        new_x = self.x() + self.MOVE_SPEED
+
+        # Проверка границ
+        if new_x > self.game_scene.SCENE_WIDTH - self.PLAYER_WIDTH:
+            new_x = self.game_scene.SCENE_WIDTH - self.PLAYER_WIDTH
+
+        self.setPos(new_x, self.y())
 
     def stop_horizontal(self):
-        """Остановка горизонтального движения"""
-        self.velocity_x = 0
+        """Остановка горизонтального движения - БОЛЬШЕ НЕ НУЖНА"""
+        # персонаж останавливается автоматически,
+        # когда клавиша не нажата
+        pass
 
     def jump(self):
         """Прыжок"""
@@ -136,4 +142,3 @@ class Player(QGraphicsRectItem):
         """Сброс позиции игрока"""
         self.setPos(50, 400)
         self.velocity_y = 0
-        self.velocity_x = 0

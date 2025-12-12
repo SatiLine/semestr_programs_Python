@@ -33,8 +33,8 @@ class GameScene(QGraphicsScene):
         self.addItem(self.player)
 
         self.current_level = 1
-        self.load_level(1)
 
+        # Создаём keys_pressed ПЕРЕД load_level()
         self.keys_pressed = set()
         self.attack_cooldown = 0
         self.ATTACK_COOLDOWN_TIME = 20
@@ -44,9 +44,15 @@ class GameScene(QGraphicsScene):
 
         self.db = DatabaseManager()
 
+        # load_level() вызывается ПОСЛЕ keys_pressed
+        self.load_level(1)
+
     def load_level(self, level_number):
         """Загрузка уровня"""
         self.current_level = level_number
+
+        # Очищаем нажатые клавиши при загрузке уровня
+        self.keys_pressed.clear()
 
         # Очищаем сцену
         for platform in self.platforms:
@@ -65,7 +71,6 @@ class GameScene(QGraphicsScene):
 
         # Сбрасываем игрока
         self.player.setPos(50, 400)
-        self.player.velocity_x = 0
         self.player.velocity_y = 0
         self.player.health = 100
         self.player.update_color()
@@ -119,13 +124,14 @@ class GameScene(QGraphicsScene):
         if self.attack_cooldown > 0:
             self.attack_cooldown -= 1
 
-        # УПРАВЛЕНИЕ A D
+        # Сначала обновляем физику (гравитацию)
+        self.player.update()
+
+        # Затем обрабатываем управление
         if Qt.Key.Key_A in self.keys_pressed:
             self.player.move_left()
         if Qt.Key.Key_D in self.keys_pressed:
             self.player.move_right()
-
-        self.player.update()
 
         for enemy in self.enemies[:]:
             enemy.update()
@@ -177,9 +183,7 @@ class GameScene(QGraphicsScene):
         key = event.key()
         self.keys_pressed.discard(key)
 
-        # Останавливаем движение при отпускании A/D
-        if key == Qt.Key.Key_A or key == Qt.Key.Key_D:
-            self.player.stop_horizontal()
+        # Персонаж останавливается автоматически
 
     def handle_mouse_press(self, event):
         """Обработка нажатия мыши"""
